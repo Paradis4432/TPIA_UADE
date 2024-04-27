@@ -30,7 +30,7 @@ namespace entities.player.impls {
             this._fsm.SetState(idle);
         }
 
-        public void Update() {
+        public void Update() {  
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
             Vector3 dir = new Vector3(x, 0, z).normalized;
