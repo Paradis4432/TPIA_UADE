@@ -29,7 +29,7 @@ namespace entities.player.impls {
 
             this._moveDirection.y = moveDirectionY;
 
-            this._controller.Move(this._moveDirection * Time.deltaTime);
+            //this._controller.Move(this._moveDirection * Time.deltaTime);
             
             this.pCamera.transform.position = Vector3.Lerp(this.pCamera.transform.position, this.transform.position,
                 this.rlert);
