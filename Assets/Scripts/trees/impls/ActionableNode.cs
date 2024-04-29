@@ -5,11 +5,11 @@ namespace trees.impls {
         private readonly Action _action;
 
         public ActionableNode(Action action) {
-            this._action = action;
+            _action = action;
         }
 
         public override void Execute() {
-            this._action();
+            _action();
         }
     }
 }

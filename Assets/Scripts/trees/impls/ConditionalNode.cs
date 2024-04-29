@@ -10,18 +10,19 @@ namespace trees.impls {
         public ConditionalNode(Func<bool> condition, ActionableNode trueNode, ActionableNode falseNode) {
             if (condition == null || trueNode == null || falseNode == null) throw new ArgumentNullException();
 
-            this._condition = condition;
-            this._trueNode = trueNode;
-            this._falseNode = falseNode;
+            _condition = condition;
+            _trueNode = trueNode;
+            _falseNode = falseNode;
         }
 
+
         public override void Execute() {
-            if (this._condition()) this._trueNode.Execute();
-            else this._falseNode.Execute();
+            if (_condition()) _trueNode.Execute();
+            else _falseNode.Execute();
         }
 
         public bool IsValid() {
-            return this._condition();
+            return _condition();
         }
     }
 }

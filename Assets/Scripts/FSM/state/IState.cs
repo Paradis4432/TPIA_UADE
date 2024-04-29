@@ -1,3 +1,6 @@
+using System.Transactions;
+using UnityEngine;
+
 namespace FSM.state {
     public interface IState<TE> {
         void Enter();
@@ -8,5 +11,7 @@ namespace FSM.state {
         void Remove(IState<TE> state);
         IState<TE> Get(TE transition);
         void SetFSM(FSM<TE> fsm);
+
+        void SetTarget(Transform target);
     }
 }
