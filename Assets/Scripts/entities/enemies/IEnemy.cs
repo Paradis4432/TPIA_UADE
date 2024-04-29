@@ -6,5 +6,6 @@ namespace entities.enemies {
         
         IEnemy.IModel Model { get; set; }
         Transform Transform { get; set; }
+        Animator Animator  { get; set; }
     }
 }

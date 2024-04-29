@@ -19,6 +19,7 @@ namespace entities.player.impls {
             Model = new PModel(this);
             View = new PView(this);
 
+            
             PlayerStates<EPlayerStates>.Idle<EPlayerStates> idle = new(EPlayerStates.IDLE, this);
             PlayerStates<EPlayerStates>.Walk<EPlayerStates> walk = new(EPlayerStates.WALK, this);
 
@@ -43,6 +44,7 @@ namespace entities.player.impls {
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
             Vector3 dir = new Vector3(x, 0, z).normalized;
+            // porque el execute del fsm no se ejecuta???
             _fsm.Transition(dir == Vector3.zero ? EPlayerStates.IDLE : EPlayerStates.WALK);
             //_fsm.Transition(dir is { x: 0, z: 0 } ? EPlayerStates.IDLE : EPlayerStates.WALK);
 

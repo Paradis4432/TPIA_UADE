@@ -11,6 +11,7 @@ namespace entities.enemies.impls {
         public Rigidbody Rigidbody { get; set; }
         public IBaseEntity.IModel Model { get; set; }
         public Transform Transform { get; set; }
+        public Animator Animator { get; set; }
 
         private ILineOfSight _lineOfSight;
         private FSM<EEnemyStates> _fsm;
@@ -19,6 +20,7 @@ namespace entities.enemies.impls {
         public void Awake() {
             _lineOfSight = GetComponent<ILineOfSight>();
             Rigidbody = GetComponent<Rigidbody>();
+            Animator = GetComponent<Animator>();
 
             Model = new BEModel(this);
             Transform = transform;
@@ -74,12 +76,7 @@ namespace entities.enemies.impls {
             _fsm.Update();
             _root.Execute();
 
-            if (InRange()) {
-                _fsm.Transition(EEnemyStates.ATTACK);
-            }
-            else {
-                this.Rigidbody.velocity = Vector3.zero;
-            }
+            _fsm.Transition(InRange() ? EEnemyStates.ATTACK : EEnemyStates.PATROL);
 
             /*_fsm.Transition(EEnemyStates.ATTACK);
             _fsm.SetTarget(target);
