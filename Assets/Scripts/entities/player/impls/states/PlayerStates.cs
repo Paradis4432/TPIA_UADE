@@ -6,8 +6,6 @@ namespace entities.player.impls.states {
         protected TE Current;
         protected PlayerController Controller;
 
-        public abstract void Execute();
-
         public class Idle<TE> : PlayerStates<TE> {
             public Idle(TE current, PlayerController playerController) {
                 Current = current;
@@ -17,9 +15,9 @@ namespace entities.player.impls.states {
             public override void Execute() {
                 Debug.LogWarning("PLAYER IDLE");
                 if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0) return;
-                Fsm.Transition(Current);
+                //Fsm.Transition(Current);
 
-                Controller.Animator.SetTrigger("Dizzy 0");
+                /*Controller.Animator.SetTrigger("Dizzy 0");*/
 
                 Controller.Rigidbody.velocity = Vector3.zero;
             }
@@ -33,7 +31,7 @@ namespace entities.player.impls.states {
 
             public override void Execute() {
                 Debug.LogWarning("WALKING");
-                Controller.Animator.SetTrigger("WalkForwardBattle");
+                /*Controller.Animator.SetTrigger("WalkForwardBattle");*/
 
                 /*float x = Input.GetAxis("Horizontal");
                 float z = Input.GetAxis("Vertical");

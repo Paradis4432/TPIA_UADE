@@ -23,7 +23,7 @@ namespace FSM {
         }
 
         public void Update() {
-            _state?.Execute();
+            _state.Execute();
         }
 
         public void Transition(TE transition) {

@@ -49,8 +49,8 @@ namespace entities.player.impls {
             //_fsm.Transition(dir is { x: 0, z: 0 } ? EPlayerStates.IDLE : EPlayerStates.WALK);
 
             // esto no deberia llamarse asi pero no anda sino
-            Model.Move(dir);
-            View.LookDir(dir);
+            //Model.Move(dir);
+            //View.LookDir(dir);
         }
 
         private void OnCollisionEnter(Collision other) {
