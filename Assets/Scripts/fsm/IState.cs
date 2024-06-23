@@ -1,4 +1,5 @@
 using fsm.impls;
+using fsm.states;
 
 namespace fsm {
     public interface IState<TState> {

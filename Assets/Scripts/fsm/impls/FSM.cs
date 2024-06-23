@@ -23,7 +23,7 @@ namespace fsm.impls {
             SetInit(newState);
         }
 
-        private void SetInit(IState<TState> init) {
+        public void SetInit(IState<TState> init) {
             _state = init;
             _state.SetFsm = this;
             _state.Enter();

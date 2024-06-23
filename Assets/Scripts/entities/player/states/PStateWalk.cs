@@ -1,13 +1,13 @@
 using fsm.states.impls;
 using UnityEngine;
 
-namespace player.states {
+namespace entities.player.states {
     public class PStateWalk<T> : State<T> {
         private readonly IPlayerModel _player;
-        private IPlayerModel _view;
+        private IPlayerView _view;
         private readonly T _idle;
 
-        public PStateWalk(IPlayerModel player, IPlayerModel view, T idle) {
+        public PStateWalk(IPlayerModel player, IPlayerView view, T idle) {
             _player = player;
             _view = view;
             _idle = idle;

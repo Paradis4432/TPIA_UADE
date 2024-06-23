@@ -1,7 +1,7 @@
 using fsm.states.impls;
 using UnityEngine;
 
-namespace player.states {
+namespace entities.player.states {
     public class PStateIdle<T> : State<T> {
         private readonly T _input;
 

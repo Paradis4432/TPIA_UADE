@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
-namespace player.impls {
+namespace entities.player.impls {
     [RequireComponent(typeof(Rigidbody))]
     public class Player : MonoBehaviour, IPlayerModel {
         public float speed;

@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
-namespace player.impls {
+namespace entities.player.impls {
     [RequireComponent(typeof(Rigidbody))]
     public sealed class PlayerView : MonoBehaviour, IPlayerView {
         public GameObject player;
@@ -16,7 +16,7 @@ namespace player.impls {
         }
 
         private void Update() {
-            animator.SetFloat(Velocity, _rigidbody.velocity.magnitude);
+            //animator.SetFloat(Velocity, _rigidbody.velocity.magnitude); // TODO reenable animator
         }
     }
 }

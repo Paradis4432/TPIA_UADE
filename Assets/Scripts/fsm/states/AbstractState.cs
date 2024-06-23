@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using fsm.impls;
+using fsm.states.impls;
 using UnityEngine;
 
 namespace fsm.states {
@@ -10,10 +11,12 @@ namespace fsm.states {
         public abstract void Enter();
         public abstract void Execute();
         public abstract void Sleep();
-
+        
         public void Add(T input, IState<T> state) {
             Transitions[input] = state;
         }
+        
+        
 
         public void Remove(T input) {
             if (Transitions.ContainsKey(input)) Transitions.Remove(input);

@@ -1,4 +1,4 @@
-namespace player {
+namespace entities.player {
     public interface IPlayerView {
         
     }
