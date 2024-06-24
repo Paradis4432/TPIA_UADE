@@ -23,7 +23,7 @@ namespace grid {
         }
 
         public static IPoint GetPointForEntity(IEntity entity) {
-            return Cache[entity];  
+            return Cache[entity];
         }
 
         public static bool IsEntityCached(IEntity entity) {
@@ -31,7 +31,6 @@ namespace grid {
         }
 
         public static void RegisterListener(IEntity entity, Action action) {
-            Debug.Log("registering listener " + entity + " action " + action);
             Actions.TryGetValue(entity, out List<Action> actions);
             if (actions == null) Actions[entity] = new List<Action> { action };
             else actions.Add(action);

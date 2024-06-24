@@ -6,6 +6,7 @@ namespace grid.points.impls {
     public class Point : MonoBehaviour, IPoint {
         private readonly List<IPoint> _neighbors = new();
         public float weight = 0;
+        public float heuristic = 0;
 
         private void Start() {
             RefreshPoints();
@@ -36,6 +37,11 @@ namespace grid.points.impls {
         public float Weight {
             get => weight;
             set => weight = value;
+        }
+        
+        public float Heuristic {
+            get => heuristic;
+            set => heuristic = value;
         }
 
         private void RefreshPoints() {

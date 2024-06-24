@@ -17,11 +17,15 @@ namespace entities.enemies.states {
             _enemy = enemy;
             _target = target;
 
-            GridManager.RegisterListener(_target, () => _points = null);
+            GridManager.RegisterListener(_target, ResetPath);
             /*GridManager.RegisterListener(_enemy, () => {
              // bug: not always removing the first
                 if (_points is { Count: > 0 }) _points.RemoveAt(0);
             });*/
+        }
+
+        public void ResetPath() {
+            _points = null;
         }
 
         public override void Execute() {
@@ -33,7 +37,7 @@ namespace entities.enemies.states {
                 _points = Algos.Astar(c, point =>
                         point == GridManager.GetPointForEntity(_target),
                     (p0) => p0.Weight,
-                    (p0) => 1f
+                    (p0) => p0.Heuristic
                 );
             }
 
@@ -45,7 +49,7 @@ namespace entities.enemies.states {
                 // [0] is prev and [1] is current causing enemy to spin in place
                 _points.RemoveAt(0);
             }
-            
+
             if (_points.Count <= 1) return;
 
             Vector3 newPos = _points[1].GetPosition();
