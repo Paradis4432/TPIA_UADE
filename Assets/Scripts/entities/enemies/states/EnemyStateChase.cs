@@ -30,15 +30,14 @@ namespace entities.enemies.states {
             if (_points == null) {
                 if (!GridManager.IsEntityCached(_target)) return;
 
-                _points = Bfs.Run(
-                    c,
-                    point => point == GridManager.GetPointForEntity(_target));
+                _points = Algos.Astar(c, point =>
+                        point == GridManager.GetPointForEntity(_target),
+                    (p0) => p0.Weight,
+                    (p0) => 1f
+                );
             }
 
-            if (_points.Count <= 1) {
-                // Debug.Log("no path found");
-                return;
-            }
+            if (_points.Count <= 1) return;
 
             if (c == _points[1] || c == _points[0]) {
                 // bug, it might be concurrency with points setting to null and the 
@@ -46,6 +45,8 @@ namespace entities.enemies.states {
                 // [0] is prev and [1] is current causing enemy to spin in place
                 _points.RemoveAt(0);
             }
+            
+            if (_points.Count <= 1) return;
 
             Vector3 newPos = _points[1].GetPosition();
             Vector3 position = _enemy.transform.position;

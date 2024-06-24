@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace grid.points.impls {
     public class Point : MonoBehaviour, IPoint {
-        public readonly List<IPoint> Neighbors = new();
+        private readonly List<IPoint> _neighbors = new();
+        public float weight = 0;
 
         private void Start() {
             RefreshPoints();
@@ -13,7 +14,7 @@ namespace grid.points.impls {
         }
 
         public IEnumerable<IPoint> GetNeighborsPoints() {
-            return Neighbors;
+            return _neighbors;
         }
 
         public void GetNeighborsPoints(Vector3 dir) {
@@ -22,7 +23,7 @@ namespace grid.points.impls {
                 if (!Physics.Raycast(transform.position, dir, out RaycastHit hit, GridManager.LeapAmount)) continue;
                 Point point = hit.collider.GetComponent<Point>();
                 if (point is null) continue;
-                Neighbors.Add(point);
+                _neighbors.Add(point);
 
                 //Debug.Log("found neighbor: " + point + " from " + this);
             }
@@ -30,6 +31,11 @@ namespace grid.points.impls {
 
         public Vector3 GetPosition() {
             return transform.position;
+        }
+
+        public float Weight {
+            get => weight;
+            set => weight = value;
         }
 
         private void RefreshPoints() {
@@ -48,7 +54,7 @@ namespace grid.points.impls {
 
         public override string ToString() {
             return "Point{" +
-                   "neighbors=" + Neighbors +
+                   "neighbors=" + _neighbors +
                    "name=" + gameObject.name +
                    '}';
         }

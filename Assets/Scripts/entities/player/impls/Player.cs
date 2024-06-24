@@ -13,7 +13,6 @@ namespace entities.player.impls {
         }
 
         public void Move(Vector3 dir) {
-            Debug.Log("moving");
             dir *= speed;
             dir.y = _rigidbody.velocity.y;
             _rigidbody.velocity = dir;

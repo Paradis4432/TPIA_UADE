@@ -6,5 +6,6 @@ namespace grid.points {
         IEnumerable<IPoint> GetNeighborsPoints();
         void GetNeighborsPoints(Vector3 dir);
         Vector3 GetPosition();
+        float Weight { get; set; }
     }
 }
