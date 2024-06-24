@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using entities;
-using entities.enemies;
 using UnityEngine;
 
 namespace grid.points.impls {
@@ -13,7 +12,7 @@ namespace grid.points.impls {
             //GetComponent<MeshRenderer>().enabled = false;
         }
 
-        public List<IPoint> GetNeighborsPoints() {
+        public IEnumerable<IPoint> GetNeighborsPoints() {
             return Neighbors;
         }
 
@@ -42,7 +41,8 @@ namespace grid.points.impls {
 
         private void OnTriggerEnter(Collider other) {
             IEntity entity = other.GetComponent<IEntity>();
-            if (entity != null) GridManager.Cache[entity] = this;
+            if (entity != null) GridManager.SavePointForEntityCache(entity, this);
+            //Debug.Log("registering:" + entity + " to:" + this);
         }
 
 
