@@ -1,4 +1,5 @@
 using entities.enemies.states;
+using entities.player.impls;
 using fsm.impls;
 using fsm.states;
 using los.impls;
@@ -8,7 +9,7 @@ using UnityEngine;
 
 namespace entities.enemies.impls {
     public class EnemyController : MonoBehaviour {
-        public Transform target;
+        public Player target;
 
         private LineOfSight _los;
         private Fsm<EStates> _fsm;
@@ -28,8 +29,6 @@ namespace entities.enemies.impls {
         private void Update() {
             _fsm.Update();
             _treeNode.Execute();
-
-            Debug.Log(TargetInRange()); 
         }
 
         private void SetupFsm() {
@@ -54,7 +53,7 @@ namespace entities.enemies.impls {
             die.Add(EStates.Chase, chase);
             die.Add(EStates.Attack, attack);
 
-            _fsm = new Fsm<EStates>(idle);
+            _fsm = new Fsm<EStates>(chase);
         }
 
         private void SetupTree() {
@@ -67,11 +66,19 @@ namespace entities.enemies.impls {
             QuestionNode targetInRange = new(TargetInRange, chase, idle);
             QuestionNode isAlive = new(() => _model.hp > 0, targetInRange, die);
 
+            // if enemy is activated
+            // should find path -> if path == null || last IPoint of target has changed in GridManager.Cache
+            // if should find path change to exploring state
+            // else if target in range -> change to chase state to go directly to the target
+            // else target not in range -> change to idle
+
             _treeNode = isAlive;
         }
 
         private bool TargetInRange() {
-            return _los.CheckRange(target) && _los.CheckAngle(target) && _los.CheckView(target);
+            return _los.CheckRange(target.transform) /*&&
+                   _los.CheckAngle(target.transform) &&
+                   _los.CheckView(target.transform)*/;
         }
     }
 }

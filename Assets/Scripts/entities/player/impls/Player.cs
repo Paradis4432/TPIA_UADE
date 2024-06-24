@@ -1,9 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
+using entities.enemies;
 using UnityEngine;
 
 namespace entities.player.impls {
     [RequireComponent(typeof(Rigidbody))]
-    public class Player : MonoBehaviour, IPlayerModel {
+    public class Player : MonoBehaviour, IPlayerModel, IEntity {
         public float speed;
         [NotNull] private Rigidbody _rigidbody;
 
@@ -12,6 +13,7 @@ namespace entities.player.impls {
         }
 
         public void Move(Vector3 dir) {
+            Debug.Log("moving");
             dir *= speed;
             dir.y = _rigidbody.velocity.y;
             _rigidbody.velocity = dir;
