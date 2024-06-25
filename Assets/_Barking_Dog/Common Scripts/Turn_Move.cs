@@ -19,12 +19,12 @@ namespace _Barking_Dog.Common_Scripts {
 	
 		// Update is called once per frame
 		void Update () {
-			if (this.World == true) {
-				this.transform.Rotate(this.TurnX * Time.deltaTime,this.TurnY * Time.deltaTime,this.TurnZ * Time.deltaTime, Space.World);
-				this.transform.Translate(this.MoveX * Time.deltaTime, this.MoveY * Time.deltaTime, this.MoveZ * Time.deltaTime, Space.World);
+			if (World == true) {
+				transform.Rotate(TurnX * Time.deltaTime,TurnY * Time.deltaTime,TurnZ * Time.deltaTime, Space.World);
+				transform.Translate(MoveX * Time.deltaTime, MoveY * Time.deltaTime, MoveZ * Time.deltaTime, Space.World);
 			}else{
-				this.transform.Rotate(this.TurnX * Time.deltaTime,this.TurnY * Time.deltaTime,this.TurnZ * Time.deltaTime, Space.Self);
-				this.transform.Translate(this.MoveX * Time.deltaTime, this.MoveY * Time.deltaTime, this.MoveZ * Time.deltaTime, Space.Self);
+				transform.Rotate(TurnX * Time.deltaTime,TurnY * Time.deltaTime,TurnZ * Time.deltaTime, Space.Self);
+				transform.Translate(MoveX * Time.deltaTime, MoveY * Time.deltaTime, MoveZ * Time.deltaTime, Space.Self);
 			}
 		}
 	}

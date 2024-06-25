@@ -42,81 +42,81 @@ namespace _Barking_Dog.Common_Scripts {
 		void Start ()
 		{
 			// Set target direction to the camera's initial orientation.
-			this.targetDirection = this.transform.localRotation.eulerAngles;
+			targetDirection = transform.localRotation.eulerAngles;
 		
 			// Set target direction for the character body to its inital state.
-			if (this.characterBody)
-				this.targetCharacterDirection = this.characterBody.transform.localRotation.eulerAngles;
+			if (characterBody)
+				targetCharacterDirection = characterBody.transform.localRotation.eulerAngles;
 		}
 	
 		void Update ()
 		{
 			// Ensure the cursor is always locked when set
 			//Screen.lockCursor = lockCursor;
-			Cursor.lockState = this.lockCursor;
+			Cursor.lockState = lockCursor;
 		
 			// Allow the script to clamp based on a desired target value.
-			var targetOrientation = Quaternion.Euler (this.targetDirection);
-			var targetCharacterOrientation = Quaternion.Euler (this.targetCharacterDirection);
+			var targetOrientation = Quaternion.Euler (targetDirection);
+			var targetCharacterOrientation = Quaternion.Euler (targetCharacterDirection);
 		
 			// Get raw mouse input for a cleaner reading on more sensitive mice.
 			var mouseDelta = new Vector2 (Input.GetAxisRaw ("Mouse X"), Input.GetAxisRaw ("Mouse Y"));
 		
 			// Scale input against the sensitivity setting and multiply that against the smoothing value.
-			mouseDelta = Vector2.Scale (mouseDelta, new Vector2 (this.sensitivity.x * this.smoothing.x, this.sensitivity.y * this.smoothing.y));
+			mouseDelta = Vector2.Scale (mouseDelta, new Vector2 (sensitivity.x * smoothing.x, sensitivity.y * smoothing.y));
 		
 			// Interpolate mouse movement over time to apply smoothing delta.
-			this._smoothMouse.x = Mathf.Lerp (this._smoothMouse.x, mouseDelta.x, 1f / this.smoothing.x);
-			this._smoothMouse.y = Mathf.Lerp (this._smoothMouse.y, mouseDelta.y, 1f / this.smoothing.y);
+			_smoothMouse.x = Mathf.Lerp (_smoothMouse.x, mouseDelta.x, 1f / smoothing.x);
+			_smoothMouse.y = Mathf.Lerp (_smoothMouse.y, mouseDelta.y, 1f / smoothing.y);
 		
 			// Find the absolute mouse movement value from point zero.
-			this._mouseAbsolute += this._smoothMouse;
+			_mouseAbsolute += _smoothMouse;
 		
 			// Clamp and apply the local x value first, so as not to be affected by world transforms.
-			if (this.clampInDegrees.x < 360)
-				this._mouseAbsolute.x = Mathf.Clamp (this._mouseAbsolute.x, -this.clampInDegrees.x * 0.5f, this.clampInDegrees.x * 0.5f);
+			if (clampInDegrees.x < 360)
+				_mouseAbsolute.x = Mathf.Clamp (_mouseAbsolute.x, -clampInDegrees.x * 0.5f, clampInDegrees.x * 0.5f);
 		
-			var xRotation = Quaternion.AngleAxis (-this._mouseAbsolute.y, targetOrientation * Vector3.right);
-			this.transform.localRotation = xRotation;
+			var xRotation = Quaternion.AngleAxis (-_mouseAbsolute.y, targetOrientation * Vector3.right);
+			transform.localRotation = xRotation;
 		
 			// Then clamp and apply the global y value.
-			if (this.clampInDegrees.y < 360)
-				this._mouseAbsolute.y = Mathf.Clamp (this._mouseAbsolute.y, -this.clampInDegrees.y * 0.5f, this.clampInDegrees.y * 0.5f);
+			if (clampInDegrees.y < 360)
+				_mouseAbsolute.y = Mathf.Clamp (_mouseAbsolute.y, -clampInDegrees.y * 0.5f, clampInDegrees.y * 0.5f);
 		
-			this.transform.localRotation *= targetOrientation;
+			transform.localRotation *= targetOrientation;
 		
 			// If there's a character body that acts as a parent to the camera
-			if (this.characterBody) {
-				var yRotation = Quaternion.AngleAxis (this._mouseAbsolute.x, this.characterBody.transform.up);
-				this.characterBody.transform.localRotation = yRotation;
-				this.characterBody.transform.localRotation *= targetCharacterOrientation;
+			if (characterBody) {
+				var yRotation = Quaternion.AngleAxis (_mouseAbsolute.x, characterBody.transform.up);
+				characterBody.transform.localRotation = yRotation;
+				characterBody.transform.localRotation *= targetCharacterOrientation;
 			} else {
-				var yRotation = Quaternion.AngleAxis (this._mouseAbsolute.x, this.transform.InverseTransformDirection (Vector3.up));
-				this.transform.localRotation *= yRotation;
+				var yRotation = Quaternion.AngleAxis (_mouseAbsolute.x, transform.InverseTransformDirection (Vector3.up));
+				transform.localRotation *= yRotation;
 			}
 		}
 
 		void FixedUpdate(){
 
-			if (Input.GetKey (this.rightKey)) {
-				this.speedX += this.acceleration * Time.deltaTime;
+			if (Input.GetKey (rightKey)) {
+				speedX += acceleration * Time.deltaTime;
 			}
-			else if (Input.GetKey (this.leftKey)) {
-				this.speedX -= this.acceleration * Time.deltaTime;
+			else if (Input.GetKey (leftKey)) {
+				speedX -= acceleration * Time.deltaTime;
 			}
-			if (Input.GetKey (this.backKey)) {
-				this.speedZ -= this.acceleration * Time.deltaTime;
-			} else if (Input.GetKey (this.fwdKey)) {
-				this.speedZ += this.acceleration * Time.deltaTime;
+			if (Input.GetKey (backKey)) {
+				speedZ -= acceleration * Time.deltaTime;
+			} else if (Input.GetKey (fwdKey)) {
+				speedZ += acceleration * Time.deltaTime;
 			}
 
-			this.speedX = Mathf.Lerp( this.speedX,0,this.dampingSpeed * Time.deltaTime);
-			this.speedZ = Mathf.Lerp( this.speedZ,0,this.dampingSpeed * Time.deltaTime);
+			speedX = Mathf.Lerp( speedX,0,dampingSpeed * Time.deltaTime);
+			speedZ = Mathf.Lerp( speedZ,0,dampingSpeed * Time.deltaTime);
 
-			this.speedX = Mathf.Clamp( this.speedX,-this.maxSpeed*Time.deltaTime, this.maxSpeed*Time.deltaTime);
-			this.speedZ = Mathf.Clamp( this.speedZ,-this.maxSpeed*Time.deltaTime, this.maxSpeed*Time.deltaTime);
+			speedX = Mathf.Clamp( speedX,-maxSpeed*Time.deltaTime, maxSpeed*Time.deltaTime);
+			speedZ = Mathf.Clamp( speedZ,-maxSpeed*Time.deltaTime, maxSpeed*Time.deltaTime);
 
-			this.transform.position = this.transform.TransformPoint( new Vector3( this.speedX,0,this.speedZ) );
+			transform.position = transform.TransformPoint( new Vector3( speedX,0,speedZ) );
 		}
 
 	}
