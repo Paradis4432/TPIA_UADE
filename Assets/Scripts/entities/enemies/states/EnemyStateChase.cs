@@ -34,10 +34,10 @@ namespace entities.enemies.states {
             if (_points == null) {
                 if (!GridManager.IsEntityCached(_target)) return;
 
-                _points = Algos.Astar(c, point =>
-                        point == GridManager.GetPointForEntity(_target),
-                    (p0) => p0.Weight,
-                    (p0) => p0.Heuristic
+                _points = Algos.Bfs(c, point =>
+                        point == GridManager.GetPointForEntity(_target)
+                    /*(p0) => p0.Weight,
+                    (p0) => p0.Heuristic*/
                 );
             }
 
