@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace fsm.states.impls {
     public abstract class State<TState> : AbstractState<TState> {
-        private const bool DebugMode = false;
+        private const bool DebugMode = true;
 
         private AbstractState<TState> _abstractStateImplementation;
 
-        public State() {
+        protected State() {
             Transitions = new Dictionary<TState, IState<TState>>();
         }
 
-        public State(Dictionary<TState, IState<TState>> transitions) {
+        protected State(Dictionary<TState, IState<TState>> transitions) {
             Transitions = transitions;
         }
 
@@ -25,6 +25,7 @@ namespace fsm.states.impls {
         public override void Sleep() {
         }
 
+        // ReSharper disable Unity.PerformanceAnalysis
         protected void Log(string s) {
             if (DebugMode)
                 Debug.Log(s);

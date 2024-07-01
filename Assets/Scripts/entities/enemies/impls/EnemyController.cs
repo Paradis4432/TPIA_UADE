@@ -88,9 +88,8 @@ namespace entities.enemies.impls {
             QuestionNode inRange = new(TargetInRange, chase, idle);
             QuestionNode inCloseRange =
                 new(() => _los.CheckDistance(target.transform) <= attackRange, randomNode, inRange);
-            QuestionNode isFrozen = new(() => GameManager.EnemiesFrozen, frozen, inCloseRange);
+            QuestionNode isFrozen = new(() => GameManager.Instance.EnemiesFrozen, frozen, inCloseRange);
             QuestionNode isDead = new(() => _model.hp <= 0, die, isFrozen);
-
 
             _treeNode = isDead;
         }

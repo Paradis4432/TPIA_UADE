@@ -38,7 +38,7 @@ namespace grid.points.impls {
             get => weight;
             set => weight = value;
         }
-        
+
         public float Heuristic {
             get => heuristic;
             set => heuristic = value;
