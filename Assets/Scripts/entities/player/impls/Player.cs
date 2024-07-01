@@ -32,13 +32,16 @@ namespace entities.player.impls {
                 powerUps--;
                 // get instance of GameManager
                 GameManager.Instance.UsePowerUp();
-                
             }
         }
 
 
         private void OnCollisionEnter(Collision other) {
             if (other.gameObject.TryGetComponent(out Enemy _)) {
+                //SceneChanger.Lost();
+            }
+            else if (other.gameObject.CompareTag("WinArea")) {
+                SceneChanger.Win();
             }
         }
     }

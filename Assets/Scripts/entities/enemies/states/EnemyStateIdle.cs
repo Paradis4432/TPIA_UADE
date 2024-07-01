@@ -16,7 +16,7 @@ namespace entities.enemies.states {
         }
 
         public override void Execute() {
-            //_enemy.transform.Rotate(0, 0.2f, 0);
+            _enemy.transform.Rotate(0, 0.2f, 0);
         }
 
         public override EStates GetStateType() {

@@ -7,6 +7,7 @@ namespace fsm.states {
         AttackBig,
         Chase,
         Die,
-        Frozen
+        Frozen,
+        Move
     }
 }

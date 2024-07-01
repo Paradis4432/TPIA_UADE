@@ -20,6 +20,8 @@ namespace entities.enemies.impls {
         private Fsm<EStates> _fsm;
         private Enemy _model;
         private ITreeNode _treeNode;
+        private int _idleCounter = 0;
+        private bool _idling = false;
 
         private void Awake() {
             _model = GetComponent<Enemy>();
@@ -41,17 +43,20 @@ namespace entities.enemies.impls {
             EnemyStateChase<EStates> chase = new(_model, target);
             EnemyStateDie<EStates> die = new();
             EnemyStateFrozen<EStates> freeze = new();
+            EnemyStateMove<EStates> move = new(_model);
+
 
             EnemyStateAttackTiny<EStates> attackTiny = new();
             EnemyStateAttackMed<EStates> attackMed = new();
             EnemyStateAttackBig<EStates> attackBig = new();
 
-            Connect(idle, new List<IState<EStates>> { chase, attackTiny, attackMed, attackBig, freeze, die });
-            Connect(chase, new List<IState<EStates>> { idle, attackTiny, attackMed, attackBig, freeze, die });
-            Connect(freeze, new List<IState<EStates>> { chase, idle, attackTiny, attackMed, attackBig, die });
-            Connect(attackTiny, new List<IState<EStates>> { chase, idle, attackMed, attackBig, freeze, die });
-            Connect(attackMed, new List<IState<EStates>> { chase, idle, attackTiny, attackBig, freeze, die });
-            Connect(attackBig, new List<IState<EStates>> { chase, idle, attackTiny, attackMed, freeze, die });
+            Connect(idle, new List<IState<EStates>> { chase, attackTiny, attackMed, attackBig, freeze, die, move });
+            Connect(chase, new List<IState<EStates>> { idle, attackTiny, attackMed, attackBig, freeze, die, move });
+            Connect(freeze, new List<IState<EStates>> { chase, idle, attackTiny, attackMed, attackBig, die, move });
+            Connect(attackTiny, new List<IState<EStates>> { chase, idle, attackMed, attackBig, freeze, die, move });
+            Connect(attackMed, new List<IState<EStates>> { chase, idle, attackTiny, attackBig, freeze, die, move });
+            Connect(attackBig, new List<IState<EStates>> { chase, idle, attackTiny, attackMed, freeze, die, move });
+            Connect(move, new List<IState<EStates>> { chase, idle, attackTiny, attackMed, attackBig, freeze, die });
 
             _fsm = new Fsm<EStates>(idle);
         }
@@ -69,6 +74,7 @@ namespace entities.enemies.impls {
             ActionNode die = new(() => _fsm.Transition(EStates.Die));
             ActionNode chase = new(() => _fsm.Transition(EStates.Chase));
             ActionNode frozen = new(() => _fsm.Transition(EStates.Frozen));
+            ActionNode move = new(() => _fsm.Transition(EStates.Move));
             ActionNode attackTiny = new(() => _fsm.Transition(EStates.AttackTiny));
             ActionNode attackMed = new(() => _fsm.Transition(EStates.AttackMed));
             ActionNode attackBig = new(() => _fsm.Transition(EStates.AttackBig));
@@ -80,12 +86,14 @@ namespace entities.enemies.impls {
             };
             RandomNode randomNode = new(d);
 
-            // if dead -> die | frozen
-            // if frozen -> freeze | in close range
-            // if close range (range <= 1) -> attack | in range
-            // if in range -> chase (on move hp--) | idle
+            QuestionNode idleOrMode = new(() => {
+                if (++_idleCounter < 1000) return _idling;
+                _idleCounter = 0;
+                _idling = !_idling;
 
-            QuestionNode inRange = new(TargetInRange, chase, idle);
+                return _idling;
+            }, move, idle);
+            QuestionNode inRange = new(TargetInRange, chase, idleOrMode);
             QuestionNode inCloseRange =
                 new(() => _los.CheckDistance(target.transform) <= attackRange, randomNode, inRange);
             QuestionNode isFrozen = new(() => GameManager.Instance.EnemiesFrozen, frozen, inCloseRange);

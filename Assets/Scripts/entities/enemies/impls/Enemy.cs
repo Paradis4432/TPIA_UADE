@@ -9,10 +9,6 @@ namespace entities.enemies.impls {
 
         private Rigidbody _rigidbody;
 
-        // if found target is set to true it means that the target was found at least once and that this
-        // enemy is activated
-        private bool _foundTarget = false;
-
         private void Start() {
             _rigidbody = GetComponent<Rigidbody>();
         }
