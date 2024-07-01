@@ -11,5 +11,6 @@ namespace fsm {
         void Remove(IState<TState> state);
         IState<TState> Get(TState input);
         Fsm<TState> SetFsm { get; set; }
+        public EStates GetStateType();
     }
 }

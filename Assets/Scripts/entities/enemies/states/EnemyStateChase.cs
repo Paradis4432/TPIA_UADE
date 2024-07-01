@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using entities.enemies.impls;
 using entities.player.impls;
+using fsm.states;
 using fsm.states.impls;
 using grid;
 using grid.pathfinding;
@@ -61,8 +62,12 @@ namespace entities.enemies.states {
             _enemy.Look(dir);
         }
 
+        public override EStates GetStateType() {
+            return EStates.Chase;
+        }
+
         public override void Enter() {
-            Debug.Log("CHASE");
+            Log("CHASE");
         }
     }
 }

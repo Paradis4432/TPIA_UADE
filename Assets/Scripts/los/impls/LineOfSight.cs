@@ -16,6 +16,10 @@ namespace los.impls {
         public bool CheckRange(Transform target, float r) {
             return Vector3.Distance(target.position, Origin) <= r;
         }
+        
+        public float CheckDistance(Transform target) {
+            return Vector3.Distance(target.position, Origin);
+        }
 
         public bool CheckAngle(Transform target) {
             return CheckAngle(target, angle);

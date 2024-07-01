@@ -1,3 +1,4 @@
+using fsm.states;
 using fsm.states.impls;
 using UnityEngine;
 
@@ -16,6 +17,10 @@ namespace entities.player.states {
 
             if (x == 0 && y == 0) return;
             Fsm.Transition(_input);
+        }
+
+        public override EStates GetStateType() {
+            return EStates.Idle;
         }
     }
 }

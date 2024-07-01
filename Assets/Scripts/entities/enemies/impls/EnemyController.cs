@@ -1,5 +1,9 @@
+using System.Collections.Generic;
+using DefaultNamespace;
 using entities.enemies.states;
+using entities.enemies.states.attacks;
 using entities.player.impls;
+using fsm;
 using fsm.impls;
 using fsm.states;
 using los.impls;
@@ -10,6 +14,7 @@ using UnityEngine;
 namespace entities.enemies.impls {
     public class EnemyController : MonoBehaviour {
         public Player target;
+        public int attackRange = 1;
 
         private LineOfSight _los;
         private Fsm<EStates> _fsm;
@@ -34,51 +39,69 @@ namespace entities.enemies.impls {
         private void SetupFsm() {
             EnemyStateIdle<EStates> idle = new(_model);
             EnemyStateChase<EStates> chase = new(_model, target);
-            EnemyStateAttack<EStates> attack = new();
             EnemyStateDie<EStates> die = new();
+            EnemyStateFrozen<EStates> freeze = new();
 
-            idle.Add(EStates.Chase, chase);
-            idle.Add(EStates.Attack, attack);
-            idle.Add(EStates.Die, die);
+            EnemyStateAttackTiny<EStates> attackTiny = new();
+            EnemyStateAttackMed<EStates> attackMed = new();
+            EnemyStateAttackBig<EStates> attackBig = new();
 
-            chase.Add(EStates.Attack, attack);
-            chase.Add(EStates.Die, die);
-            chase.Add(EStates.Idle, idle);
+            Connect(idle, new List<IState<EStates>> { chase, attackTiny, attackMed, attackBig, freeze, die });
+            Connect(chase, new List<IState<EStates>> { idle, attackTiny, attackMed, attackBig, freeze, die });
+            Connect(freeze, new List<IState<EStates>> { chase, idle, attackTiny, attackMed, attackBig, die });
+            Connect(attackTiny, new List<IState<EStates>> { chase, idle, attackMed, attackBig, freeze, die });
+            Connect(attackMed, new List<IState<EStates>> { chase, idle, attackTiny, attackBig, freeze, die });
+            Connect(attackBig, new List<IState<EStates>> { chase, idle, attackTiny, attackMed, freeze, die });
 
-            attack.Add(EStates.Chase, chase);
-            attack.Add(EStates.Die, die);
-            attack.Add(EStates.Idle, idle);
+            _fsm = new Fsm<EStates>(idle);
+        }
 
-            die.Add(EStates.Idle, idle);
-            die.Add(EStates.Chase, chase);
-            die.Add(EStates.Attack, attack);
-
-            _fsm = new Fsm<EStates>(chase);
+        private static void Connect(IState<EStates> source, IEnumerable<IState<EStates>> targets) {
+            foreach (IState<EStates> state in targets) {
+                if (state.GetStateType().Equals(source.GetStateType()))
+                    continue;
+                source.Add(state.GetStateType(), state);
+            }
         }
 
         private void SetupTree() {
             ActionNode idle = new(() => _fsm.Transition(EStates.Idle));
             ActionNode die = new(() => _fsm.Transition(EStates.Die));
-            ActionNode attack = new(() => _fsm.Transition(EStates.Attack));
             ActionNode chase = new(() => _fsm.Transition(EStates.Chase));
+            ActionNode frozen = new(() => _fsm.Transition(EStates.Frozen));
+            ActionNode attackTiny = new(() => _fsm.Transition(EStates.AttackTiny));
+            ActionNode attackMed = new(() => _fsm.Transition(EStates.AttackMed));
+            ActionNode attackBig = new(() => _fsm.Transition(EStates.AttackBig));
+
+            Dictionary<ITreeNode, float> d = new() {
+                [attackTiny] = 70,
+                [attackMed] = 40,
+                [attackBig] = 10
+            };
+            RandomNode randomNode = new(d);
+
+            // if dead -> die | frozen
+            // if frozen -> freeze | in close range
+            // if close range (range <= 1) -> attack | in range
+            // if in range -> chase (on move hp--) | idle
+
+            QuestionNode inRange = new(TargetInRange, chase, idle);
+            QuestionNode inCloseRange =
+                new(() => _los.CheckDistance(target.transform) <= attackRange, randomNode, inRange);
+            QuestionNode isFrozen = new(() => GameManager.EnemiesFrozen, frozen, inCloseRange);
+            QuestionNode isDead = new(() => _model.hp <= 0, die, isFrozen);
 
 
-            QuestionNode targetInRange = new(TargetInRange, chase, idle);
-            QuestionNode isAlive = new(() => _model.hp > 0, targetInRange, die);
-
-            // if enemy is activated
-            // should find path -> if path == null || last IPoint of target has changed in GridManager.Cache
-            // if should find path change to exploring state
-            // else if target in range -> change to chase state to go directly to the target
-            // else target not in range -> change to idle
-
-            _treeNode = isAlive;
+            _treeNode = isDead;
         }
 
         private bool TargetInRange() {
-            return _los.CheckRange(target.transform) /*&&
-                   _los.CheckAngle(target.transform) &&
-                   _los.CheckView(target.transform)*/;
+            return
+                _los.CheckRange(target
+                    .transform) && // todo check range and check distance both call Vector3.Distance that calls math.sqrt. fix this
+                /*_los.CheckAngle(target.transform) &&*/
+                // bug when it changes the angle to move to the target using the nodes, check angle stops working due to the change in the direction
+                _los.CheckView(target.transform);
         }
     }
 }

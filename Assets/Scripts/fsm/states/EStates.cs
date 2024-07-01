@@ -2,8 +2,11 @@ namespace fsm.states {
     public enum EStates {
         Idle,
         Walk,
-        Attack,
+        AttackTiny,
+        AttackMed,
+        AttackBig,
         Chase,
-        Die
+        Die,
+        Frozen
     }
 }

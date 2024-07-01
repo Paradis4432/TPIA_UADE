@@ -1,3 +1,4 @@
+using fsm.states;
 using fsm.states.impls;
 using UnityEngine;
 
@@ -25,6 +26,10 @@ namespace entities.player.states {
             if (dir is { x: 0, z: 0 }) {
                 Fsm.Transition(_idle);
             }
+        }
+
+        public override EStates GetStateType() {
+            return EStates.Walk;
         }
     }
 }

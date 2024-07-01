@@ -1,7 +1,10 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace fsm.states.impls {
-    public class State<TState> : AbstractState<TState> {
+    public abstract class State<TState> : AbstractState<TState> {
+        private const bool DebugMode = false;
+
         private AbstractState<TState> _abstractStateImplementation;
 
         public State() {
@@ -20,6 +23,11 @@ namespace fsm.states.impls {
         }
 
         public override void Sleep() {
+        }
+
+        protected void Log(string s) {
+            if (DebugMode)
+                Debug.Log(s);
         }
     }
 }

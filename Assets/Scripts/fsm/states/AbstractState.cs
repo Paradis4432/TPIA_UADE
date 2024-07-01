@@ -8,6 +8,7 @@ namespace fsm.states {
     public abstract class AbstractState<T> : MonoBehaviour, IState<T> {
         protected Fsm<T> Fsm;
         protected Dictionary<T, IState<T>> Transitions = new();
+        private IState<T> _stateImplementation;
         public abstract void Enter();
         public abstract void Execute();
         public abstract void Sleep();
@@ -15,8 +16,6 @@ namespace fsm.states {
         public void Add(T input, IState<T> state) {
             Transitions[input] = state;
         }
-        
-        
 
         public void Remove(T input) {
             if (Transitions.ContainsKey(input)) Transitions.Remove(input);
@@ -37,5 +36,7 @@ namespace fsm.states {
             set => Fsm = value;
             get => Fsm;
         }
+
+        public abstract EStates GetStateType();
     }
 }

@@ -1,4 +1,5 @@
 using entities.enemies.impls;
+using fsm.states;
 using fsm.states.impls;
 using UnityEngine;
 
@@ -11,11 +12,15 @@ namespace entities.enemies.states {
         }
 
         public override void Enter() {
-            Debug.Log("IDLE");
+            Log("IDLE");
         }
 
         public override void Execute() {
             //_enemy.transform.Rotate(0, 0.2f, 0);
+        }
+
+        public override EStates GetStateType() {
+            return EStates.Idle;
         }
     }
 }
